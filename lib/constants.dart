@@ -35,6 +35,7 @@ var kErrorOutlineBorder = OutlineInputBorder(
   ),
 );
 
+// loader
 const kBtnLoader = SizedBox(
   height: 22.0,
   width: 22.0,

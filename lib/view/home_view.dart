@@ -5,6 +5,7 @@ import 'package:pokemon_app/auth/auth.dart';
 import 'package:pokemon_app/constants.dart';
 import 'package:pokemon_app/controller/pokemon_controller.dart';
 import 'package:pokemon_app/model/pokemon.dart';
+import 'package:pokemon_app/model/pokemon_list.dart';
 import 'package:pokemon_app/widgets/custom_loader.dart';
 import 'package:pokemon_app/widgets/pokemon_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,14 +16,15 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  // auth
+  final _auth = Auth();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   List<String> _localList = [];
   List<Pokemon> pokemons = [];
   List favsPokemons = [];
 
-  final _auth = Auth();
-
+  // fetch data from API
   void _loadData() async {
     PokemonList data = await PokemonController().getPokemons();
 
@@ -35,6 +37,7 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  // check Favorites in Local Storage
   void _checkFavs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _localList = prefs.getStringList(_firebaseAuth.currentUser.uid);
@@ -85,7 +88,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                 );
-                await _auth.signOut(context);
+                await _auth.logout(context);
               },
             ),
             pinned: true,

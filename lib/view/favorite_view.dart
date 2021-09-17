@@ -11,6 +11,7 @@ class FavoriteView extends StatefulWidget {
 class _FavoriteViewState extends State<FavoriteView> {
   List<String> _favt = [];
 
+  // getting pokemons names from Local Storage Shared Preferences
   void _getPokemons() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List _local = prefs.getStringList(FirebaseAuth.instance.currentUser.uid);
@@ -66,12 +67,15 @@ class _FavoriteViewState extends State<FavoriteView> {
     );
   }
 
+  // removing Pokemon from list
   void _removeFav(String pokemon) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _favt.remove(pokemon);
     });
-    prefs.setStringList(FirebaseAuth.instance.currentUser.uid, _favt);
+
+    prefs.setStringList(FirebaseAuth.instance.currentUser.uid,
+        _favt); // overriding the LIST in local Storage
 
     var snackBar = SnackBar(
       backgroundColor: kPrimaryColor,

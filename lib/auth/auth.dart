@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Auth {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  // create account
   Future signUp(
     String name,
     String email,
@@ -44,6 +45,7 @@ class Auth {
     }
   }
 
+  // login
   Future login(String email, String password) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -69,22 +71,11 @@ class Auth {
     }
   }
 
-  Future signOut(BuildContext context) async {
+  // logout
+  Future logout(BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Navigator.pop(context);
     preferences.remove('userId');
     await _firebaseAuth.signOut();
-  }
-
-  Future forgotPassword(String email) async {
-    try {
-      if (email.isEmpty) return "Email cannot be empty!";
-      await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
-        return "Account does not exists with this email!";
-      }
-      return null;
-    }
   }
 }

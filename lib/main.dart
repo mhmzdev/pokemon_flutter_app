@@ -1,12 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokemon_app/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:pokemon_app/blocs/authentication_bloc/authentication_state.dart';
-import 'package:pokemon_app/blocs/simple_bloc_observer.dart';
 import 'package:pokemon_app/constants.dart';
-import 'package:pokemon_app/repository/user_repository.dart';
 import 'package:pokemon_app/view/favorite_view.dart';
 import 'package:pokemon_app/view/home_view.dart';
 import 'package:pokemon_app/view/login_vew.dart';
@@ -15,28 +9,15 @@ import 'package:pokemon_app/view/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = SimpleBlocObserver();
   await Firebase.initializeApp();
-  final UserRepository userRepository = UserRepository();
-  // runApp(
-  //   BlocProvider(
-  //     create: (context) => AuthenticationBloc(userRepository: userRepository),
-  //     child: MyApp(
-  //       userRepository: userRepository,
-  //     ),
-  //   ),
-  // );
   runApp(MyApp());
 }
 
+/// MVC Architecture Followed!
+/// bloc implementation ==> bloc branch at GIT
+/// https://github.com/mhmzdev/pokemon_flutter_app
+
 class MyApp extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  const MyApp({
-    Key key,
-    UserRepository userRepository,
-  }) : _userRepository = userRepository;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

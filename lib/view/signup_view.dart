@@ -213,6 +213,7 @@ class _SignUpViewState extends State<SignUpView>
     );
   }
 
+  // signup ftn
   void _signUp() async {
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -240,6 +241,7 @@ class _SignUpViewState extends State<SignUpView>
     }
   }
 
+  // on signup success
   void _signUpSuccess() {
     var snackBar = SnackBar(
       content: Row(
@@ -264,6 +266,7 @@ class _SignUpViewState extends State<SignUpView>
     _formKey.currentState.reset();
   }
 
+  // on signup error
   void _signUpError(String value) {
     print("Error: " + value);
     var snackBar = SnackBar(
