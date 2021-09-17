@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pokemon_app/animations/entrance_fader.dart';
+import 'package:pokemon_app/view/home/home_view.dart';
+import 'package:pokemon_app/view/login/view/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
+  static Page page() => MaterialPage(child: SplashScreen());
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -13,10 +17,11 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String _userId = prefs.getString('userId');
+
     Future.delayed(Duration(seconds: 3), () {
       _userId == null
-          ? Navigator.pushReplacementNamed(context, '/login')
-          : Navigator.pushReplacementNamed(context, '/home');
+          ? Navigator.of(context).push(LoginPage.route())
+          : Navigator.of(context).push(HomeView.route());
     });
   }
 

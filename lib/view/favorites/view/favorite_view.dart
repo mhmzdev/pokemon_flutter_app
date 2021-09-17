@@ -4,6 +4,10 @@ import 'package:pokemon_app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoriteView extends StatefulWidget {
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => FavoriteView());
+  }
+
   @override
   _FavoriteViewState createState() => _FavoriteViewState();
 }

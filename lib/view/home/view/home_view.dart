@@ -1,15 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pokemon_app/auth/auth.dart';
+import 'package:pokemon_app/app/bloc/app_bloc.dart';
 import 'package:pokemon_app/constants.dart';
 import 'package:pokemon_app/controller/pokemon_controller.dart';
 import 'package:pokemon_app/model/pokemon.dart';
+import 'package:pokemon_app/view/favorites/favorite_view.dart';
 import 'package:pokemon_app/widgets/custom_loader.dart';
 import 'package:pokemon_app/widgets/pokemon_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeView extends StatefulWidget {
+  static Page page() => MaterialPage(child: HomeView());
+
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => HomeView());
+  }
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -17,12 +25,12 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  List<String> _localList = [];
-  List<Pokemon> pokemons = [];
-  List favsPokemons = [];
+  // storing the pokemons data
+  List<String> _localList = []; // checking if there are fvts in local list
+  List<Pokemon> pokemons = []; // actual pokemon data from API
+  List favsPokemons = []; // list of favs pokemons
 
-  final _auth = Auth();
-
+  // fetching data from API
   void _loadData() async {
     PokemonList data = await PokemonController().getPokemons();
 
@@ -35,6 +43,7 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  // checking the favs pokemon from API and local list
   void _checkFavs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _localList = prefs.getStringList(_firebaseAuth.currentUser.uid);
@@ -71,29 +80,15 @@ class _HomeViewState extends State<HomeView> {
             <Widget>[
           SliverAppBar(
             leading: BackButton(
-              onPressed: () async {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 2),
-                    backgroundColor: kPrimaryColor,
-                    content: Row(
-                      children: [
-                        const Icon(Icons.person, color: Colors.white),
-                        const SizedBox(width: 8.0),
-                        const Text("Signed out! Good bye :)"),
-                      ],
-                    ),
-                  ),
-                );
-                await _auth.signOut(context);
-              },
+              onPressed: _signOut,
             ),
             pinned: true,
             expandedHeight: 180.0,
             actions: [
               IconButton(
                 onPressed: () async {
-                  var value = await Navigator.pushNamed(context, '/favorite');
+                  var value =
+                      await Navigator.push(context, FavoriteView.route());
                   if (value) {
                     setState(() {
                       pokemons.length = 0;
@@ -138,5 +133,23 @@ class _HomeViewState extends State<HomeView> {
               ),
       ),
     );
+  }
+
+  void _signOut() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        backgroundColor: kPrimaryColor,
+        content: Row(
+          children: [
+            const Icon(Icons.person, color: Colors.white),
+            const SizedBox(width: 8.0),
+            const Text("Signed out! Good bye :)"),
+          ],
+        ),
+      ),
+    );
+    // await _auth.signOut(context);
+    context.read<AppBloc>().add(AppLogoutRequested());
   }
 }
