@@ -10,7 +10,8 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   SignUpCubit(this._authenticationRepository) : super(SignUpState());
 
-  Future<void> signUp() async {
+  // sign Up ftn
+  Future signUp() async {
     try {
       var value = await _authenticationRepository.signUp(
         email: state.email,

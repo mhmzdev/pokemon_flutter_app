@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:pokemon_app/model/pokemon.dart';
+import 'package:pokemon_app/model/pokemon_list.dart';
 
 class PokemonController {
   Future getPokemons() async {

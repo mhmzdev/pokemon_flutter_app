@@ -5,6 +5,7 @@ import 'package:pokemon_app/app/bloc/app_bloc.dart';
 import 'package:pokemon_app/constants.dart';
 import 'package:pokemon_app/controller/pokemon_controller.dart';
 import 'package:pokemon_app/model/pokemon.dart';
+import 'package:pokemon_app/model/pokemon_list.dart';
 import 'package:pokemon_app/view/favorites/favorite_view.dart';
 import 'package:pokemon_app/widgets/custom_loader.dart';
 import 'package:pokemon_app/widgets/pokemon_card.dart';
@@ -135,6 +136,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  // signout ftn NOT WORKING AS EXPECTED!
   void _signOut() async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -149,7 +151,6 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
-    // await _auth.signOut(context);
     context.read<AppBloc>().add(AppLogoutRequested());
   }
 }

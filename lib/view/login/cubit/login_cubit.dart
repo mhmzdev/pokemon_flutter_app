@@ -10,6 +10,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this._authenticationRepository) : super(LoginState());
 
+  // login ftn
   Future login() async {
     try {
       var value = await _authenticationRepository.login(

@@ -14,6 +14,4 @@ void main() async {
   await authRepository.user.first;
 
   runApp(MyApp(authenticationRepository: authRepository));
-
-  // runApp(MyApp());
 }

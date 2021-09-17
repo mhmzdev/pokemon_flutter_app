@@ -8,6 +8,7 @@ abstract class AppEvent extends Equatable {
 }
 
 class AppLogoutRequested extends AppEvent {
+  /// Its not working as Expected!
   Future logout() async {
     AuthenticationRepository authenticationRepository =
         AuthenticationRepository();

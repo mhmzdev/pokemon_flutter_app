@@ -13,10 +13,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // Route depending on the user is already logged into the app or not via Shared Prefs.
   void _authCheck() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String _userId = prefs.getString('userId');
+    String _userId = prefs.getString('userId'); // userId from local storage
 
     Future.delayed(Duration(seconds: 3), () {
       _userId == null

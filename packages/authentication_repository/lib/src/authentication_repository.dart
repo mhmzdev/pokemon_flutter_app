@@ -7,6 +7,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Returning "UNKONWN" as Error code from FIREBASE at Login/SignUp
+/// Other than that auth is working fine with bloc in main branch
+/// https://github.com/mhmzdev/pokemon_flutter_app
+
 class AuthenticationRepository {
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
@@ -64,7 +68,7 @@ class AuthenticationRepository {
       _firebaseAuth.signOut(),
     ]);
 
-    // preferences.remove('userId');
+    preferences.remove('userId');
   }
 
   Future login({String email, String password}) async {
@@ -77,8 +81,8 @@ class AuthenticationRepository {
         password: password,
       ))
               .user;
-      // preferences.setString('userId', user.uid);
-      // print(preferences.getString('userId'));
+      preferences.setString('userId', user.uid);
+      print(preferences.getString('userId'));
     } on firebase_auth.FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return "Account does not exists!";

@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView>
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Authentication Failure')),
+              const SnackBar(content: Text('Missing Fields!')),
             );
         }
       },
@@ -176,6 +176,7 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
+  // override the back button on android
   Future<bool> _onWillPop() async {
     return (await showDialog(
           context: context,
@@ -214,6 +215,7 @@ class _LoginViewState extends State<LoginView>
   }
 }
 
+// login button written in separate Stateless widget (NOT SURE WHY? But bloc is working this way)
 class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
