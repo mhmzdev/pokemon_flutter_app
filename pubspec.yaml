@@ -21,9 +21,6 @@ environment:
   sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
-  authentication_repository:
-    path: packages/authentication_repository
-    
   flutter:
     sdk: flutter
 
@@ -42,7 +39,6 @@ dependencies:
   bloc: ^7.1.0
   flutter_bloc: ^7.2.0
   equatable: ^2.0.3
-  flow_builder: ^0.0.4
 
   # other packages
   flutter_form_builder: ^6.1.0+1

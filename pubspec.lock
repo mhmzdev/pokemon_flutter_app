@@ -8,13 +8,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
-  authentication_repository:
-    dependency: "direct main"
-    description:
-      path: "packages/authentication_repository"
-      relative: true
-    source: path
-    version: "1.0.0"
   bloc:
     dependency: "direct main"
     description:
@@ -29,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  cache:
-    dependency: transitive
-    description:
-      path: "packages/cache"
-      relative: true
-    source: path
-    version: "1.0.0"
   characters:
     dependency: transitive
     description:
@@ -162,13 +148,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  flow_builder:
-    dependency: "direct main"
-    description:
-      name: flow_builder
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -453,13 +432,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  very_good_analysis:
-    dependency: transitive
-    description:
-      name: very_good_analysis
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.0"
   win32:
     dependency: transitive
     description:

@@ -1,8 +1,7 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:pokemon_app/view/login/cubit/login_cubit.dart';
+import 'package:pokemon_app/cubits/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokemon_app/view/login/view/login_view.dart';
+import 'package:pokemon_app/view/login/login_view.dart';
 
 class LoginPage extends StatelessWidget {
   static Route route() {
@@ -12,7 +11,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
+      create: (_) => AuthCubit(),
       child: LoginView(),
     );
   }

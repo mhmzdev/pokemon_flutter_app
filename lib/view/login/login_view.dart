@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pokemon_app/constants.dart';
 import 'package:pokemon_app/cubits/auth/auth_cubit.dart';
+import 'package:pokemon_app/view/home/home_page.dart';
+import 'package:pokemon_app/view/signUp/signup_page.dart';
 import 'package:pokemon_app/widgets/custom_btn.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SignUpView extends StatefulWidget {
+class LoginView extends StatefulWidget {
   @override
-  _SignUpViewState createState() => _SignUpViewState();
+  _LoginViewState createState() => _LoginViewState();
 }
 
-class _SignUpViewState extends State<SignUpView>
+class _LoginViewState extends State<LoginView>
     with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController _animationController;
+
   final _formKey = GlobalKey<FormBuilderState>();
   bool _isObscure = true;
 
@@ -34,7 +39,7 @@ class _SignUpViewState extends State<SignUpView>
     super.initState();
 
     _animationController = new AnimationController(
-        duration: Duration(milliseconds: 1800), vsync: this)
+        duration: Duration(milliseconds: 1500), vsync: this)
       ..addListener(() => setState(() {}));
     toggleAnimation();
   }
@@ -47,60 +52,58 @@ class _SignUpViewState extends State<SignUpView>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        body: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is AuthSignUpError) {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(content: Text(state.err)),
-                );
-            } else if (state is AuthSignUpSuccess) {
-              Navigator.pop(context);
-            }
-          },
-          builder: (context, state) {
-            if (state is AuthInitial) {
-              return _buildInitialForm();
-            } else if (state is AuthSignUpLoading) {
-              return _loading();
-            } else if (state is AuthSignUpSuccess) {
-              return _buildInitialForm();
-            } else {
-              return _buildInitialForm();
-            }
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          body: BlocConsumer<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is AuthLoginError) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text(state.err)),
+                  );
+              }
+              if (state is AuthLoginSuccess) {
+                Navigator.push(context, HomePage.route());
+              }
+            },
+            builder: (context, state) {
+              if (state is AuthInitial) {
+                return buildInitialScreen();
+              } else if (state is AuthLoginLoading) {
+                return buildLoader();
+              } else if (state is AuthLoginError) {
+                return buildInitialScreen();
+              } else {
+                return buildInitialScreen();
+              }
+            },
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildInitialForm() {
+  Widget buildInitialScreen() {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: FormBuilder(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
+      child: FormBuilder(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.disabled,
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: BackButton(
-                    color: kPrimaryColor,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
                 Transform.translate(
                   offset: Offset(0, animation.value),
                   child: Hero(
                     tag: 'img',
                     child: SvgPicture.asset(
                       'assets/pokeball.svg',
-                      height: 70.0,
+                      height: 100.0,
                     ),
                   ),
                 ),
@@ -109,54 +112,11 @@ class _SignUpViewState extends State<SignUpView>
                   "Pokemon Flutter App",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
+                    fontSize: 22.0,
                     color: kPrimaryColor,
                   ),
                 ),
-                const SizedBox(height: 15.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Sign Up',
-                    style: kHeadingStyle,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "It's quick and easy",
-                    style: TextStyle(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25.0),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: FormBuilderTextField(
-                    textInputAction: TextInputAction.next,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(context),
-                      FormBuilderValidators.match(context, r'[a-zA-Z]',
-                          errorText: "Name can only be alphabets!"),
-                    ]),
-                    name: 'name',
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      prefixIcon: Icon(Icons.person),
-                      hintText: 'Full Name',
-                      hintStyle: kHintStyle,
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                      enabledBorder: kOutlineBorder,
-                      focusedBorder: kOutlineBorder,
-                      errorBorder: kErrorOutlineBorder,
-                      focusedErrorBorder: kErrorOutlineBorder,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15.0),
+                const SizedBox(height: 50.0),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: FormBuilderTextField(
@@ -169,7 +129,7 @@ class _SignUpViewState extends State<SignUpView>
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
                       prefixIcon: Icon(Icons.email),
-                      hintText: 'Email Address',
+                      hintText: 'Enter email',
                       hintStyle: kHintStyle,
                       fillColor: Colors.grey[200],
                       filled: true,
@@ -184,13 +144,12 @@ class _SignUpViewState extends State<SignUpView>
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: FormBuilderTextField(
-                    textInputAction: TextInputAction.done,
                     validator: FormBuilderValidators.required(context),
                     obscureText: _isObscure,
                     name: 'password',
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
-                      prefixIcon: Icon(Icons.lock_open),
+                      prefixIcon: Icon(Icons.lock),
                       hintText: 'Enter password',
                       hintStyle: kHintStyle,
                       fillColor: Colors.grey[200],
@@ -216,25 +175,31 @@ class _SignUpViewState extends State<SignUpView>
                   ),
                 ),
                 const SizedBox(height: 25.0),
-                _SignUpButton(
+                _LoginButton(
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       final authCubit = BlocProvider.of<AuthCubit>(context);
-                      await authCubit.signUp(
-                          _formKey.currentState.fields['name'].value,
+                      await authCubit.login(
                           _formKey.currentState.fields['email'].value,
                           _formKey.currentState.fields['password'].value);
                     }
                   },
                 ),
-                const SizedBox(height: 30.0),
-                const Text(
-                  "By clicking sign up you are agreeing to our Terms of Services",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: kPrimaryColor,
-                  ),
-                )
+                TextButton(
+                    onPressed: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.remove('userId');
+                    },
+                    child: const Text("Forgot Password?")),
+                const Divider(height: 30.0, endIndent: 8.0, indent: 8.0),
+                CustomButton(
+                  btnColor: Colors.redAccent,
+                  onPressed: () {
+                    Navigator.push(context, SignUpPage.route());
+                  },
+                  child: const Text("Create New Account"),
+                ),
               ],
             ),
           ),
@@ -243,19 +208,59 @@ class _SignUpViewState extends State<SignUpView>
     );
   }
 
-  Widget _loading() {
-    return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+  Widget buildLoader() => Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+          ),
+        ),
+      );
+
+  // override the back button on android
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              "Exit Application",
+            ),
+            content: const Text(
+              "Are You Sure?",
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  "Yes",
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+                onPressed: () {
+                  SystemNavigator.pop();
+                },
+              ),
+              TextButton(
+                child: Text(
+                  "No",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        )) ??
+        false;
   }
 }
 
-class _SignUpButton extends StatelessWidget {
+class _LoginButton extends StatelessWidget {
   final Function onPressed;
 
-  const _SignUpButton({
+  const _LoginButton({
     Key key,
     this.onPressed,
   }) : super(key: key);
@@ -263,10 +268,7 @@ class _SignUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomButton(
       onPressed: onPressed,
-      child: const Text(
-        "Sign Up",
-        style: TextStyle(color: Colors.white),
-      ),
+      child: const Text("Login"),
     );
   }
 }
