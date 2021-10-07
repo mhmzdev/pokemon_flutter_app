@@ -12,9 +12,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   // auth check
   Future init() async {
+    print("AUTH CHECK!!");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
+      emit(AuthInitial());
       String _userId = prefs.getString('userId');
+      print("USER ID: $_userId");
       emit(AuthLoginCheck(_userId == null ? null : _userId));
     } catch (e) {
       emit(AuthInitial());
