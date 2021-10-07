@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.splash,
         routes: <String, WidgetBuilder>{
           AppRoutes.splash: (context) => SplashScreen(),
           AppRoutes.login: (context) => LoginPage(),
